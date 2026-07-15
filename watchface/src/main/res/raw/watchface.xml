@@ -30,39 +30,45 @@
     <!-- Outer rim: battery arc. Faint full track, foreground sweep tracks
          [BATTERY_PERCENT], color steps at <=30% and <=15%. -->
     <Group x="0" y="0" width="450" height="450" name="battery_ring">
-      <PartDraw x="0" y="0" width="450" height="450" name="battery_track">
-        <Arc centerX="225" centerY="225" width="434" height="434" startAngle="0" endAngle="360" alpha="56">
-          <Variant mode="AMBIENT" target="alpha" value="30"/>
+      <PartDraw x="0" y="0" width="450" height="450" name="battery_track" alpha="56">
+        <Variant mode="AMBIENT" target="alpha" value="30"/>
+        <Arc centerX="225" centerY="225" width="434" height="434" startAngle="0" endAngle="360">
           <Stroke color="[CONFIGURATION.themeColor.1]" thickness="8"/>
         </Arc>
       </PartDraw>
-      <PartDraw x="0" y="0" width="450" height="450" name="battery_level">
-        <Variant mode="AMBIENT" target="alpha" value="130"/>
-        <Condition>
-          <Expressions>
-            <Expression name="batteryCritical"><![CDATA[[BATTERY_PERCENT] <= 15]]></Expression>
-            <Expression name="batteryWarning"><![CDATA[[BATTERY_PERCENT] <= 30]]></Expression>
-          </Expressions>
-          <Compare expression="batteryCritical">
+      <Condition>
+        <Expressions>
+          <Expression name="batteryCritical"><![CDATA[[BATTERY_PERCENT] <= 15]]></Expression>
+          <Expression name="batteryWarning"><![CDATA[[BATTERY_PERCENT] <= 30]]></Expression>
+        </Expressions>
+        <Compare expression="batteryCritical">
+          <PartDraw x="0" y="0" width="450" height="450" name="battery_level_critical">
+            <Variant mode="AMBIENT" target="alpha" value="130"/>
             <Arc centerX="225" centerY="225" width="434" height="434" startAngle="0" endAngle="0">
               <Transform target="endAngle" value="[BATTERY_PERCENT] * 3.6"/>
               <Stroke color="#ffFF5C5C" thickness="8" cap="ROUND"/>
             </Arc>
-          </Compare>
-          <Compare expression="batteryWarning">
+          </PartDraw>
+        </Compare>
+        <Compare expression="batteryWarning">
+          <PartDraw x="0" y="0" width="450" height="450" name="battery_level_warning">
+            <Variant mode="AMBIENT" target="alpha" value="130"/>
             <Arc centerX="225" centerY="225" width="434" height="434" startAngle="0" endAngle="0">
               <Transform target="endAngle" value="[BATTERY_PERCENT] * 3.6"/>
               <Stroke color="#ffFFB454" thickness="8" cap="ROUND"/>
             </Arc>
-          </Compare>
-          <Default>
+          </PartDraw>
+        </Compare>
+        <Default>
+          <PartDraw x="0" y="0" width="450" height="450" name="battery_level_ok">
+            <Variant mode="AMBIENT" target="alpha" value="130"/>
             <Arc centerX="225" centerY="225" width="434" height="434" startAngle="0" endAngle="0">
               <Transform target="endAngle" value="[BATTERY_PERCENT] * 3.6"/>
               <Stroke color="[CONFIGURATION.themeColor.0]" thickness="8" cap="ROUND"/>
             </Arc>
-          </Default>
-        </Condition>
-      </PartDraw>
+          </PartDraw>
+        </Default>
+      </Condition>
     </Group>
 
     <!-- Center time: normal weight interactive, thin in ambient (alpha swap
@@ -99,8 +105,8 @@
       <BoundingOval x="0" y="0" width="110" height="110" outlinePadding="2.0"/>
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT"/>
       <Complication type="SHORT_TEXT">
-        <PartDraw x="0" y="0" width="110" height="110">
-          <Ellipse x="1" y="1" width="108" height="108" alpha="90">
+        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
+          <Ellipse x="1" y="1" width="108" height="108">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
@@ -181,8 +187,8 @@
         </Condition>
       </Complication>
       <Complication type="MONOCHROMATIC_IMAGE">
-        <PartDraw x="0" y="0" width="110" height="110">
-          <Ellipse x="1" y="1" width="108" height="108" alpha="90">
+        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
+          <Ellipse x="1" y="1" width="108" height="108">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
@@ -191,8 +197,8 @@
         </PartImage>
       </Complication>
       <Complication type="SMALL_IMAGE">
-        <PartDraw x="0" y="0" width="110" height="110">
-          <Ellipse x="1" y="1" width="108" height="108" alpha="90">
+        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
+          <Ellipse x="1" y="1" width="108" height="108">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
@@ -201,10 +207,12 @@
         </PartImage>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartDraw x="10" y="10" width="90" height="90">
-          <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150" alpha="70">
+        <PartDraw x="10" y="10" width="90" height="90" alpha="70">
+          <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150">
             <Stroke thickness="8" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
           </Arc>
+        </PartDraw>
+        <PartDraw x="10" y="10" width="90" height="90">
           <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150">
             <Stroke thickness="8" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
             <Transform target="endAngle" value="-150 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (300))"/>
@@ -266,8 +274,8 @@
       <BoundingOval x="0" y="0" width="110" height="110" outlinePadding="2.0"/>
       <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT"/>
       <Complication type="SHORT_TEXT">
-        <PartDraw x="0" y="0" width="110" height="110">
-          <Ellipse x="1" y="1" width="108" height="108" alpha="90">
+        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
+          <Ellipse x="1" y="1" width="108" height="108">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
@@ -348,8 +356,8 @@
         </Condition>
       </Complication>
       <Complication type="MONOCHROMATIC_IMAGE">
-        <PartDraw x="0" y="0" width="110" height="110">
-          <Ellipse x="1" y="1" width="108" height="108" alpha="90">
+        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
+          <Ellipse x="1" y="1" width="108" height="108">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
@@ -358,8 +366,8 @@
         </PartImage>
       </Complication>
       <Complication type="SMALL_IMAGE">
-        <PartDraw x="0" y="0" width="110" height="110">
-          <Ellipse x="1" y="1" width="108" height="108" alpha="90">
+        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
+          <Ellipse x="1" y="1" width="108" height="108">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
@@ -368,10 +376,12 @@
         </PartImage>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartDraw x="10" y="10" width="90" height="90">
-          <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150" alpha="70">
+        <PartDraw x="10" y="10" width="90" height="90" alpha="70">
+          <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150">
             <Stroke thickness="8" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
           </Arc>
+        </PartDraw>
+        <PartDraw x="10" y="10" width="90" height="90">
           <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150">
             <Stroke thickness="8" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
             <Transform target="endAngle" value="-150 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (300))"/>
