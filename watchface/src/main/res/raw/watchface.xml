@@ -26,9 +26,9 @@
   <Metadata key="PREVIEW_TIME" value="10:08:00"/>
   <UserConfigurations>
     <ColorConfiguration id="themeColor" defaultValue="0" displayName="colors_label" screenReaderText="colors_label">
-      <ColorOption displayName="theme_copper_label" id="0" colors="#E8B18A #C08552"/>
-      <ColorOption displayName="theme_silver_label" id="1" colors="#E8E8E8 #9AA0A6"/>
-      <ColorOption displayName="theme_sage_label" id="2" colors="#BCCFA6 #85A06B"/>
+      <ColorOption displayName="theme_copper_label" id="0" colors="#FFE8B18A #FFC08552"/>
+      <ColorOption displayName="theme_silver_label" id="1" colors="#FFE8E8E8 #FF9AA0A6"/>
+      <ColorOption displayName="theme_sage_label" id="2" colors="#FFBCCFA6 #FF85A06B"/>
     </ColorConfiguration>
   </UserConfigurations>
   <Scene backgroundColor="#ff000000">
@@ -107,11 +107,11 @@
     <!-- Center time: normal weight interactive, thin in ambient (alpha swap
          between two TimeText twins). No seconds, no mode label. -->
     <DigitalClock x="0" y="0" width="450" height="450">
-      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="92" width="450" height="112" alpha="255">
+      <TimeText format="h:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="92" width="450" height="112" alpha="255">
         <Variant mode="AMBIENT" target="alpha" value="0"/>
         <Font family="SYNC_TO_DEVICE" size="100" weight="NORMAL" slant="NORMAL" color="[CONFIGURATION.themeColor.0]"/>
       </TimeText>
-      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="92" width="450" height="112" alpha="0">
+      <TimeText format="h:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="92" width="450" height="112" alpha="0">
         <Variant mode="AMBIENT" target="alpha" value="255"/>
         <Font family="SYNC_TO_DEVICE" size="100" weight="THIN" slant="NORMAL" color="[CONFIGURATION.themeColor.0]"/>
       </TimeText>
