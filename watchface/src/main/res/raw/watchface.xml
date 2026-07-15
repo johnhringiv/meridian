@@ -11,7 +11,9 @@
         top-left 280-330°, top-right 30-80°, bottom-left 210-260°,
         bottom-right 100-150°. Bottom slots run COUNTER_CLOCKWISE so glyphs
         stay upright.
-      - Time: y=64, height 134, font 122
+      - AM/PM chip: 48x28 at (201,64), only rendered in 12-hour mode
+      - Time: y=92, height 112, font 100 — sized so wide times ("10:08")
+        keep their top corners inside radius ~178, clear of the rim text band
       - Date chips: y=202, height 30 — day-of-week left, month+day right
       - Circular complication slots: 128x128 at (92,253) and (230,253);
         diagonal clearance to the bottom rim text caps this size
@@ -75,16 +77,43 @@
       </Condition>
     </Group>
 
+    <!-- AM/PM chip above the time, hidden when the device uses 24-hour time -->
+    <Condition>
+      <Expressions>
+        <Expression name="is12hMode"><![CDATA[![IS_24_HOUR_MODE]]]></Expression>
+      </Expressions>
+      <Compare expression="is12hMode">
+        <Group x="201" y="64" width="48" height="28" name="ampm_chip">
+          <PartDraw x="0" y="0" width="48" height="28" alpha="90">
+            <Variant mode="AMBIENT" target="alpha" value="50"/>
+            <RoundRectangle x="1" y="1" width="46" height="26" cornerRadiusX="8" cornerRadiusY="8">
+              <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
+            </RoundRectangle>
+          </PartDraw>
+          <PartText x="0" y="0" width="48" height="28">
+            <Variant mode="AMBIENT" target="alpha" value="150"/>
+            <Text align="CENTER">
+              <Font family="SYNC_TO_DEVICE" size="18" color="[CONFIGURATION.themeColor.0]">
+                <Template><![CDATA[%s]]>
+                  <Parameter expression="[AMPM_STRING]"/>
+                </Template>
+              </Font>
+            </Text>
+          </PartText>
+        </Group>
+      </Compare>
+    </Condition>
+
     <!-- Center time: normal weight interactive, thin in ambient (alpha swap
          between two TimeText twins). No seconds, no mode label. -->
     <DigitalClock x="0" y="0" width="450" height="450">
-      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="64" width="450" height="134" alpha="255">
+      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="92" width="450" height="112" alpha="255">
         <Variant mode="AMBIENT" target="alpha" value="0"/>
-        <Font family="SYNC_TO_DEVICE" size="122" weight="NORMAL" slant="NORMAL" color="[CONFIGURATION.themeColor.0]"/>
+        <Font family="SYNC_TO_DEVICE" size="100" weight="NORMAL" slant="NORMAL" color="[CONFIGURATION.themeColor.0]"/>
       </TimeText>
-      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="64" width="450" height="134" alpha="0">
+      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="92" width="450" height="112" alpha="0">
         <Variant mode="AMBIENT" target="alpha" value="255"/>
-        <Font family="SYNC_TO_DEVICE" size="122" weight="THIN" slant="NORMAL" color="[CONFIGURATION.themeColor.0]"/>
+        <Font family="SYNC_TO_DEVICE" size="100" weight="THIN" slant="NORMAL" color="[CONFIGURATION.themeColor.0]"/>
       </TimeText>
     </DigitalClock>
 
@@ -230,6 +259,13 @@
             <Stroke thickness="9" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
             <Transform target="endAngle" value="-150 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (300))"/>
           </Arc>
+        </PartDraw>
+        <!-- Marker dot on the arc at the current value, like the stock ring -->
+        <PartDraw x="12" y="12" width="104" height="104">
+          <Ellipse x="44" y="-8" width="16" height="16">
+            <Fill color="[CONFIGURATION.themeColor.0]"/>
+          </Ellipse>
+          <Transform target="angle" value="-150 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (300))"/>
         </PartDraw>
         <Condition>
           <Expressions>
@@ -399,6 +435,13 @@
             <Stroke thickness="9" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
             <Transform target="endAngle" value="-150 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (300))"/>
           </Arc>
+        </PartDraw>
+        <!-- Marker dot on the arc at the current value, like the stock ring -->
+        <PartDraw x="12" y="12" width="104" height="104">
+          <Ellipse x="44" y="-8" width="16" height="16">
+            <Fill color="[CONFIGURATION.themeColor.0]"/>
+          </Ellipse>
+          <Transform target="angle" value="-150 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (300))"/>
         </PartDraw>
         <Condition>
           <Expressions>
