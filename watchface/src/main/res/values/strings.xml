@@ -7,4 +7,8 @@
     <string name="theme_sage_label">Sage</string>
     <string name="left_complication_label">Left</string>
     <string name="right_complication_label">Right</string>
+    <string name="top_left_complication_label">Top left rim</string>
+    <string name="top_right_complication_label">Top right rim</string>
+    <string name="bottom_left_complication_label">Bottom left rim</string>
+    <string name="bottom_right_complication_label">Bottom right rim</string>
 </resources>

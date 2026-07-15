@@ -1,16 +1,20 @@
 <?xml version="1.0"?>
 <!--
-    Meridian — a clean digital face: time and date in the center, battery as an
-    arc around the rim (replacing a tick ring), two user-assignable
-    complications below. No mode label.
+    Meridian — a clean digital face: time centered, day/date as side chips,
+    battery as an arc around the rim (replacing a tick ring), two circular
+    complications below, four curved rim complications at the diagonals.
+    No mode label.
 
-    Layout constants (450x450 design space):
-      - Battery ring: centered, diameter 434, thickness 8. Full 360° sweep;
-        for a gapped arc change RING_START (startAngle) and the 3.6 multiplier
-        (sweep/100) together.
-      - Time: y=118, height 134, font 122
-      - Date row: y=256, height 36
-      - Complication slots: 110x110 at (100,300) and (240,300)
+    Layout constants (450x450 design space, angles clockwise from 12 o'clock):
+      - Battery ring: diameter 434, thickness 8, full 360° sweep
+      - Rim complications: text on radius 192 (diameter 384), one per diagonal:
+        top-left 280-330°, top-right 30-80°, bottom-left 210-260°,
+        bottom-right 100-150°. Bottom slots run COUNTER_CLOCKWISE so glyphs
+        stay upright.
+      - Time: y=64, height 134, font 122
+      - Date chips: y=202, height 30 — day-of-week left, month+day right
+      - Circular complication slots: 128x128 at (92,253) and (230,253);
+        diagonal clearance to the bottom rim text caps this size
 
     Complication renderers adapted from the AOSP WatchFaceFormat/Complications
     sample (Apache-2.0).
@@ -74,24 +78,33 @@
     <!-- Center time: normal weight interactive, thin in ambient (alpha swap
          between two TimeText twins). No seconds, no mode label. -->
     <DigitalClock x="0" y="0" width="450" height="450">
-      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="118" width="450" height="134" alpha="255">
+      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="64" width="450" height="134" alpha="255">
         <Variant mode="AMBIENT" target="alpha" value="0"/>
         <Font family="SYNC_TO_DEVICE" size="122" weight="NORMAL" slant="NORMAL" color="[CONFIGURATION.themeColor.0]"/>
       </TimeText>
-      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="118" width="450" height="134" alpha="0">
+      <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="64" width="450" height="134" alpha="0">
         <Variant mode="AMBIENT" target="alpha" value="255"/>
         <Font family="SYNC_TO_DEVICE" size="122" weight="THIN" slant="NORMAL" color="[CONFIGURATION.themeColor.0]"/>
       </TimeText>
     </DigitalClock>
 
-    <!-- Day + date row -->
-    <Group x="0" y="256" width="450" height="36" name="day_date_row">
-      <PartText x="0" y="0" width="450" height="36">
+    <!-- Date chips: day-of-week left, month + day right -->
+    <Group x="0" y="202" width="450" height="30" name="date_chips">
+      <PartText x="34" y="0" width="88" height="30">
         <Variant mode="AMBIENT" target="alpha" value="150"/>
         <Text align="CENTER">
-          <Font family="SYNC_TO_DEVICE" size="26" color="[CONFIGURATION.themeColor.1]">
-            <Template><![CDATA[%s %s %s]]>
+          <Font family="SYNC_TO_DEVICE" size="24" color="[CONFIGURATION.themeColor.1]">
+            <Template><![CDATA[%s]]>
               <Parameter expression="[DAY_OF_WEEK_S]"/>
+            </Template>
+          </Font>
+        </Text>
+      </PartText>
+      <PartText x="328" y="0" width="88" height="30">
+        <Variant mode="AMBIENT" target="alpha" value="150"/>
+        <Text align="CENTER">
+          <Font family="SYNC_TO_DEVICE" size="24" color="[CONFIGURATION.themeColor.1]">
+            <Template><![CDATA[%s %s]]>
               <Parameter expression="[MONTH_S]"/>
               <Parameter expression="[DAY]"/>
             </Template>
@@ -100,13 +113,13 @@
       </PartText>
     </Group>
 
-    <!-- Left complication (user-assignable) -->
-    <ComplicationSlot x="100" y="300" width="110" height="110" slotId="0" displayName="left_complication_label" supportedTypes="RANGED_VALUE SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY">
-      <BoundingOval x="0" y="0" width="110" height="110" outlinePadding="2.0"/>
+    <!-- Left circular complication (user-assignable) -->
+    <ComplicationSlot x="92" y="253" width="128" height="128" slotId="0" displayName="left_complication_label" supportedTypes="RANGED_VALUE SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY">
+      <BoundingOval x="0" y="0" width="128" height="128" outlinePadding="2.0"/>
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT"/>
       <Complication type="SHORT_TEXT">
-        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
-          <Ellipse x="1" y="1" width="108" height="108">
+        <PartDraw x="0" y="0" width="128" height="128" alpha="90">
+          <Ellipse x="1" y="1" width="126" height="126">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
@@ -117,55 +130,55 @@
             <Expression name="shortText_title"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression>
           </Expressions>
           <Compare expression="shortText_monochromaticImageAndTitle">
-            <PartText x="21" y="16" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="19" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartText x="21" y="39" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="46" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartImage x="38" y="64" width="34" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartImage x="45" y="74" width="38" height="38" tintColor="[CONFIGURATION.themeColor.0]">
               <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
             </PartImage>
           </Compare>
           <Compare expression="shortText_monochromaticImage">
-            <PartText x="21" y="33" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="38" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartImage x="38" y="64" width="34" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartImage x="45" y="74" width="38" height="38" tintColor="[CONFIGURATION.themeColor.0]">
               <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
             </PartImage>
           </Compare>
           <Compare expression="shortText_title">
-            <PartText x="21" y="22" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="26" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartText x="21" y="44" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="51" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
@@ -174,9 +187,9 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="21" y="38" width="68" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="44" width="80" height="36" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
@@ -187,34 +200,34 @@
         </Condition>
       </Complication>
       <Complication type="MONOCHROMATIC_IMAGE">
-        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
-          <Ellipse x="1" y="1" width="108" height="108">
+        <PartDraw x="0" y="0" width="128" height="128" alpha="90">
+          <Ellipse x="1" y="1" width="126" height="126">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
-        <PartImage x="21" y="21" width="68" height="68" tintColor="[CONFIGURATION.themeColor.0]">
+        <PartImage x="25" y="25" width="78" height="78" tintColor="[CONFIGURATION.themeColor.0]">
           <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
         </PartImage>
       </Complication>
       <Complication type="SMALL_IMAGE">
-        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
-          <Ellipse x="1" y="1" width="108" height="108">
+        <PartDraw x="0" y="0" width="128" height="128" alpha="90">
+          <Ellipse x="1" y="1" width="126" height="126">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
-        <PartImage x="21" y="21" width="68" height="68">
+        <PartImage x="25" y="25" width="78" height="78">
           <Image resource="[COMPLICATION.SMALL_IMAGE]"/>
         </PartImage>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartDraw x="10" y="10" width="90" height="90" alpha="70">
-          <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150">
-            <Stroke thickness="8" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
+        <PartDraw x="12" y="12" width="104" height="104" alpha="70">
+          <Arc centerX="52" centerY="52" width="104" height="104" startAngle="-150" endAngle="150">
+            <Stroke thickness="9" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
           </Arc>
         </PartDraw>
-        <PartDraw x="10" y="10" width="90" height="90">
-          <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150">
-            <Stroke thickness="8" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
+        <PartDraw x="12" y="12" width="104" height="104">
+          <Arc centerX="52" centerY="52" width="104" height="104" startAngle="-150" endAngle="150">
+            <Stroke thickness="9" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
             <Transform target="endAngle" value="-150 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (300))"/>
           </Arc>
         </PartDraw>
@@ -225,28 +238,28 @@
             <Expression name="rangedValue_text"><![CDATA[[COMPLICATION.TEXT] != null]]></Expression>
           </Expressions>
           <Compare expression="rangedValue_monochromaticImageAndText">
-            <PartText x="21" y="33" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="38" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartImage x="38" y="62" width="34" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartImage x="45" y="70" width="38" height="38" tintColor="[CONFIGURATION.themeColor.0]">
               <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
             </PartImage>
           </Compare>
           <Compare expression="rangedValue_monochromaticImage">
-            <PartImage x="32" y="32" width="45" height="45" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartImage x="38" y="38" width="52" height="52" tintColor="[CONFIGURATION.themeColor.0]">
               <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
             </PartImage>
           </Compare>
           <Compare expression="rangedValue_text">
-            <PartText x="21" y="38" width="68" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="44" width="80" height="36" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
@@ -255,9 +268,9 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="21" y="38" width="68" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="44" width="80" height="36" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
                   </Template>
@@ -269,13 +282,13 @@
       </Complication>
     </ComplicationSlot>
 
-    <!-- Right complication (user-assignable) -->
-    <ComplicationSlot x="240" y="300" width="110" height="110" slotId="1" displayName="right_complication_label" supportedTypes="RANGED_VALUE SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY">
-      <BoundingOval x="0" y="0" width="110" height="110" outlinePadding="2.0"/>
+    <!-- Right circular complication (user-assignable) -->
+    <ComplicationSlot x="230" y="253" width="128" height="128" slotId="1" displayName="right_complication_label" supportedTypes="RANGED_VALUE SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY">
+      <BoundingOval x="0" y="0" width="128" height="128" outlinePadding="2.0"/>
       <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT"/>
       <Complication type="SHORT_TEXT">
-        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
-          <Ellipse x="1" y="1" width="108" height="108">
+        <PartDraw x="0" y="0" width="128" height="128" alpha="90">
+          <Ellipse x="1" y="1" width="126" height="126">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
@@ -286,55 +299,55 @@
             <Expression name="shortText_title"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression>
           </Expressions>
           <Compare expression="shortText_monochromaticImageAndTitle">
-            <PartText x="21" y="16" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="19" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartText x="21" y="39" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="46" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartImage x="38" y="64" width="34" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartImage x="45" y="74" width="38" height="38" tintColor="[CONFIGURATION.themeColor.0]">
               <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
             </PartImage>
           </Compare>
           <Compare expression="shortText_monochromaticImage">
-            <PartText x="21" y="33" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="38" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartImage x="38" y="64" width="34" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartImage x="45" y="74" width="38" height="38" tintColor="[CONFIGURATION.themeColor.0]">
               <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
             </PartImage>
           </Compare>
           <Compare expression="shortText_title">
-            <PartText x="21" y="22" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="26" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartText x="21" y="44" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="51" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
@@ -343,9 +356,9 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="21" y="38" width="68" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="44" width="80" height="36" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
@@ -356,34 +369,34 @@
         </Condition>
       </Complication>
       <Complication type="MONOCHROMATIC_IMAGE">
-        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
-          <Ellipse x="1" y="1" width="108" height="108">
+        <PartDraw x="0" y="0" width="128" height="128" alpha="90">
+          <Ellipse x="1" y="1" width="126" height="126">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
-        <PartImage x="21" y="21" width="68" height="68" tintColor="[CONFIGURATION.themeColor.0]">
+        <PartImage x="25" y="25" width="78" height="78" tintColor="[CONFIGURATION.themeColor.0]">
           <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
         </PartImage>
       </Complication>
       <Complication type="SMALL_IMAGE">
-        <PartDraw x="0" y="0" width="110" height="110" alpha="90">
-          <Ellipse x="1" y="1" width="108" height="108">
+        <PartDraw x="0" y="0" width="128" height="128" alpha="90">
+          <Ellipse x="1" y="1" width="126" height="126">
             <Stroke thickness="2" color="[CONFIGURATION.themeColor.1]"/>
           </Ellipse>
         </PartDraw>
-        <PartImage x="21" y="21" width="68" height="68">
+        <PartImage x="25" y="25" width="78" height="78">
           <Image resource="[COMPLICATION.SMALL_IMAGE]"/>
         </PartImage>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartDraw x="10" y="10" width="90" height="90" alpha="70">
-          <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150">
-            <Stroke thickness="8" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
+        <PartDraw x="12" y="12" width="104" height="104" alpha="70">
+          <Arc centerX="52" centerY="52" width="104" height="104" startAngle="-150" endAngle="150">
+            <Stroke thickness="9" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
           </Arc>
         </PartDraw>
-        <PartDraw x="10" y="10" width="90" height="90">
-          <Arc centerX="45" centerY="45" width="90" height="90" startAngle="-150" endAngle="150">
-            <Stroke thickness="8" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
+        <PartDraw x="12" y="12" width="104" height="104">
+          <Arc centerX="52" centerY="52" width="104" height="104" startAngle="-150" endAngle="150">
+            <Stroke thickness="9" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
             <Transform target="endAngle" value="-150 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (300))"/>
           </Arc>
         </PartDraw>
@@ -394,28 +407,28 @@
             <Expression name="rangedValue_text"><![CDATA[[COMPLICATION.TEXT] != null]]></Expression>
           </Expressions>
           <Compare expression="rangedValue_monochromaticImageAndText">
-            <PartText x="21" y="33" width="68" height="28" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="38" width="80" height="30" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
                 </Font>
               </Text>
             </PartText>
-            <PartImage x="38" y="62" width="34" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartImage x="45" y="70" width="38" height="38" tintColor="[CONFIGURATION.themeColor.0]">
               <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
             </PartImage>
           </Compare>
           <Compare expression="rangedValue_monochromaticImage">
-            <PartImage x="32" y="32" width="45" height="45" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartImage x="38" y="38" width="52" height="52" tintColor="[CONFIGURATION.themeColor.0]">
               <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
             </PartImage>
           </Compare>
           <Compare expression="rangedValue_text">
-            <PartText x="21" y="38" width="68" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="44" width="80" height="36" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
                   </Template>
@@ -424,9 +437,9 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="21" y="38" width="68" height="34" tintColor="[CONFIGURATION.themeColor.0]">
+            <PartText x="24" y="44" width="80" height="36" tintColor="[CONFIGURATION.themeColor.0]">
               <Text align="CENTER" ellipsis="TRUE">
-                <Font family="SYNC_TO_DEVICE" size="20.0">
+                <Font family="SYNC_TO_DEVICE" size="22.0">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
                   </Template>
@@ -435,6 +448,150 @@
             </PartText>
           </Default>
         </Condition>
+      </Complication>
+    </ComplicationSlot>
+
+    <!-- Rim complications: curved text on radius 192, just inside the battery
+         ring. Slot boxes are full-canvas; the BoundingArc defines the region.
+         Icon fallback positions are precomputed per-slot on the same radius. -->
+
+    <!-- Top-left rim complication (280-330°) -->
+    <ComplicationSlot x="0" y="0" width="450" height="450" slotId="2" displayName="top_left_complication_label" supportedTypes="SHORT_TEXT RANGED_VALUE MONOCHROMATIC_IMAGE EMPTY">
+      <BoundingArc centerX="225" centerY="225" width="414" height="414" thickness="44" startAngle="280" endAngle="330" outlinePadding="2.0"/>
+      <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT"/>
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="0" width="450" height="450">
+          <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="280" endAngle="330" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+            <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
+              <Template><![CDATA[%s]]>
+                <Parameter expression="[COMPLICATION.TEXT]"/>
+              </Template>
+            </Font>
+          </TextCircular>
+        </PartText>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartDraw x="0" y="0" width="450" height="450" alpha="70">
+          <Arc centerX="225" centerY="225" width="384" height="384" startAngle="280" endAngle="330">
+            <Stroke thickness="6" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
+          </Arc>
+        </PartDraw>
+        <PartDraw x="0" y="0" width="450" height="450">
+          <Arc centerX="225" centerY="225" width="384" height="384" startAngle="280" endAngle="280">
+            <Stroke thickness="6" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
+            <Transform target="endAngle" value="280 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (50))"/>
+          </Arc>
+        </PartDraw>
+      </Complication>
+      <Complication type="MONOCHROMATIC_IMAGE">
+        <PartImage x="53" y="100" width="30" height="30" tintColor="[CONFIGURATION.themeColor.1]">
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+        </PartImage>
+      </Complication>
+    </ComplicationSlot>
+
+    <!-- Top-right rim complication (30-80°) -->
+    <ComplicationSlot x="0" y="0" width="450" height="450" slotId="3" displayName="top_right_complication_label" supportedTypes="SHORT_TEXT RANGED_VALUE MONOCHROMATIC_IMAGE EMPTY">
+      <BoundingArc centerX="225" centerY="225" width="414" height="414" thickness="44" startAngle="30" endAngle="80" outlinePadding="2.0"/>
+      <DefaultProviderPolicy defaultSystemProvider="UNREAD_NOTIFICATION_COUNT" defaultSystemProviderType="SHORT_TEXT"/>
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="0" width="450" height="450">
+          <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="30" endAngle="80" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+            <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
+              <Template><![CDATA[%s]]>
+                <Parameter expression="[COMPLICATION.TEXT]"/>
+              </Template>
+            </Font>
+          </TextCircular>
+        </PartText>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartDraw x="0" y="0" width="450" height="450" alpha="70">
+          <Arc centerX="225" centerY="225" width="384" height="384" startAngle="30" endAngle="80">
+            <Stroke thickness="6" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
+          </Arc>
+        </PartDraw>
+        <PartDraw x="0" y="0" width="450" height="450">
+          <Arc centerX="225" centerY="225" width="384" height="384" startAngle="30" endAngle="30">
+            <Stroke thickness="6" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
+            <Transform target="endAngle" value="30 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (50))"/>
+          </Arc>
+        </PartDraw>
+      </Complication>
+      <Complication type="MONOCHROMATIC_IMAGE">
+        <PartImage x="367" y="100" width="30" height="30" tintColor="[CONFIGURATION.themeColor.1]">
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+        </PartImage>
+      </Complication>
+    </ComplicationSlot>
+
+    <!-- Bottom-left rim complication (210-260°, counter-clockwise so text is upright) -->
+    <ComplicationSlot x="0" y="0" width="450" height="450" slotId="4" displayName="bottom_left_complication_label" supportedTypes="SHORT_TEXT RANGED_VALUE MONOCHROMATIC_IMAGE EMPTY">
+      <BoundingArc centerX="225" centerY="225" width="414" height="414" thickness="44" startAngle="210" endAngle="260" outlinePadding="2.0"/>
+      <DefaultProviderPolicy defaultSystemProvider="WORLD_CLOCK" defaultSystemProviderType="SHORT_TEXT"/>
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="0" width="450" height="450">
+          <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="260" endAngle="210" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+            <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
+              <Template><![CDATA[%s]]>
+                <Parameter expression="[COMPLICATION.TEXT]"/>
+              </Template>
+            </Font>
+          </TextCircular>
+        </PartText>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartDraw x="0" y="0" width="450" height="450" alpha="70">
+          <Arc centerX="225" centerY="225" width="384" height="384" startAngle="210" endAngle="260">
+            <Stroke thickness="6" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
+          </Arc>
+        </PartDraw>
+        <PartDraw x="0" y="0" width="450" height="450">
+          <Arc centerX="225" centerY="225" width="384" height="384" startAngle="210" endAngle="210">
+            <Stroke thickness="6" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
+            <Transform target="endAngle" value="210 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (50))"/>
+          </Arc>
+        </PartDraw>
+      </Complication>
+      <Complication type="MONOCHROMATIC_IMAGE">
+        <PartImage x="53" y="320" width="30" height="30" tintColor="[CONFIGURATION.themeColor.1]">
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+        </PartImage>
+      </Complication>
+    </ComplicationSlot>
+
+    <!-- Bottom-right rim complication (100-150°, counter-clockwise so text is upright) -->
+    <ComplicationSlot x="0" y="0" width="450" height="450" slotId="5" displayName="bottom_right_complication_label" supportedTypes="SHORT_TEXT RANGED_VALUE MONOCHROMATIC_IMAGE EMPTY">
+      <BoundingArc centerX="225" centerY="225" width="414" height="414" thickness="44" startAngle="100" endAngle="150" outlinePadding="2.0"/>
+      <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="SHORT_TEXT"/>
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="0" width="450" height="450">
+          <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="150" endAngle="100" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+            <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
+              <Template><![CDATA[%s]]>
+                <Parameter expression="[COMPLICATION.TEXT]"/>
+              </Template>
+            </Font>
+          </TextCircular>
+        </PartText>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartDraw x="0" y="0" width="450" height="450" alpha="70">
+          <Arc centerX="225" centerY="225" width="384" height="384" startAngle="100" endAngle="150">
+            <Stroke thickness="6" color="[CONFIGURATION.themeColor.1]" cap="ROUND"/>
+          </Arc>
+        </PartDraw>
+        <PartDraw x="0" y="0" width="450" height="450">
+          <Arc centerX="225" centerY="225" width="384" height="384" startAngle="100" endAngle="100">
+            <Stroke thickness="6" color="[CONFIGURATION.themeColor.0]" cap="ROUND"/>
+            <Transform target="endAngle" value="100 + (((clamp(([COMPLICATION.RANGED_VALUE_VALUE]), ([COMPLICATION.RANGED_VALUE_MIN]), ([COMPLICATION.RANGED_VALUE_MAX])) - ([COMPLICATION.RANGED_VALUE_MIN])) / (([COMPLICATION.RANGED_VALUE_MAX]) - ([COMPLICATION.RANGED_VALUE_MIN]))) * (50))"/>
+          </Arc>
+        </PartDraw>
+      </Complication>
+      <Complication type="MONOCHROMATIC_IMAGE">
+        <PartImage x="367" y="320" width="30" height="30" tintColor="[CONFIGURATION.themeColor.1]">
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+        </PartImage>
       </Complication>
     </ComplicationSlot>
 
