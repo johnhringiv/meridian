@@ -93,8 +93,9 @@ jobs:
           set -euo pipefail
           cd /tmp/wff-tools/play-validations
           ./gradlew --no-daemon -q :memory-footprint:executable-jar
+          # Glob: the APK is watchface-release.apk when signed, -unsigned.apk without the keystore secret
           java -jar memory-footprint/build/libs/memory-footprint.jar \
-            --watch-face "$GITHUB_WORKSPACE"/watchface/build/outputs/apk/release/watchface-release.apk \
+            --watch-face "$GITHUB_WORKSPACE"/watchface/build/outputs/apk/release/watchface-release*.apk \
             --schema-version 1 \
             --ambient-limit-mb 10 \
             --active-limit-mb 100 \
@@ -105,7 +106,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: Meridian-apk
-          path: watchface/build/outputs/apk/release/watchface-release.apk
+          path: watchface/build/outputs/apk/release/watchface-release*.apk
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -127,7 +128,7 @@ jobs:
           set -euo pipefail
           vn=$(grep -oP 'versionName = "\K[^"]+' watchface/build.gradle.kts)
           vc=$(grep -oP 'versionCode = \K\d+' watchface/build.gradle.kts)
-          mv watchface-release.apk "Meridian-v${vn}.apk"
+          mv watchface-release*.apk "Meridian-v${vn}.apk"
           # The squash commit body IS the changelog (repo squashes with PR_BODY).
           git log -1 --format=%b > notes.md
           printf '\n---\nversionCode %s · sideload instructions in the README\n' "${vc}" >> notes.md
