@@ -515,7 +515,7 @@
           </Expressions>
           <Compare expression="tl_iconAndTitle">
             <PartImage x="29" y="153" width="26" height="26">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+              <Image resource="ic_rim_sunrise"/>
             </PartImage>
             <PartText x="0" y="0" width="450" height="450">
               <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="293" endAngle="335" align="START" direction="CLOCKWISE" ellipsis="TRUE">
@@ -530,7 +530,7 @@
           </Compare>
           <Compare expression="tl_icon">
             <PartImage x="29" y="153" width="26" height="26">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+              <Image resource="ic_rim_sunrise"/>
             </PartImage>
             <PartText x="0" y="0" width="450" height="450">
               <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="293" endAngle="335" align="START" direction="CLOCKWISE" ellipsis="TRUE">
@@ -610,7 +610,7 @@
           </Expressions>
           <Compare expression="tr_iconAndTitle">
             <PartImage x="352" y="81" width="26" height="26">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+              <Image resource="ic_rim_sun"/>
             </PartImage>
             <PartText x="0" y="0" width="450" height="450">
               <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="52" endAngle="85" align="START" direction="CLOCKWISE" ellipsis="TRUE">
@@ -625,7 +625,7 @@
           </Compare>
           <Compare expression="tr_icon">
             <PartImage x="352" y="81" width="26" height="26">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+              <Image resource="ic_rim_sun"/>
             </PartImage>
             <PartText x="0" y="0" width="450" height="450">
               <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="52" endAngle="85" align="START" direction="CLOCKWISE" ellipsis="TRUE">
@@ -701,7 +701,7 @@
           </Expressions>
           <Compare expression="bl_iconAndTitle">
             <PartImage x="28" y="268" width="26" height="26">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+              <Image resource="ic_rim_globe"/>
             </PartImage>
             <PartText x="0" y="0" width="450" height="450">
               <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="248" endAngle="210" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
@@ -716,7 +716,7 @@
           </Compare>
           <Compare expression="bl_icon">
             <PartImage x="28" y="268" width="26" height="26">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+              <Image resource="ic_rim_globe"/>
             </PartImage>
             <PartText x="0" y="0" width="450" height="450">
               <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="248" endAngle="210" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
@@ -796,7 +796,7 @@
           </Expressions>
           <Compare expression="br_iconAndTitle">
             <PartImage x="340" y="355" width="26" height="26">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+              <Image resource="ic_rim_moon"/>
             </PartImage>
             <PartText x="0" y="0" width="450" height="450">
               <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="133" endAngle="100" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
@@ -811,7 +811,7 @@
           </Compare>
           <Compare expression="br_icon">
             <PartImage x="340" y="355" width="26" height="26">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+              <Image resource="ic_rim_moon"/>
             </PartImage>
             <PartText x="0" y="0" width="450" height="450">
               <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="133" endAngle="100" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
