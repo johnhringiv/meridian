@@ -145,7 +145,7 @@
     <!-- Left circular complication (user-assignable) -->
     <ComplicationSlot x="92" y="253" width="128" height="128" slotId="0" displayName="left_complication_label" supportedTypes="RANGED_VALUE SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY">
       <BoundingOval x="0" y="0" width="128" height="128" outlinePadding="2.0"/>
-      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT"/>
+      <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT"/>
       <Complication type="SHORT_TEXT">
         <PartDraw x="0" y="0" width="128" height="128" alpha="90">
           <Ellipse x="1" y="1" width="126" height="126">
@@ -321,7 +321,9 @@
     <!-- Right circular complication (user-assignable) -->
     <ComplicationSlot x="230" y="253" width="128" height="128" slotId="1" displayName="right_complication_label" supportedTypes="RANGED_VALUE SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY">
       <BoundingOval x="0" y="0" width="128" height="128" outlinePadding="2.0"/>
-      <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT"/>
+      <!-- Intended default is the weather complication (app provider) — needs the
+           provider component via primaryProvider; steps until that's wired. -->
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT"/>
       <Complication type="SHORT_TEXT">
         <PartDraw x="0" y="0" width="128" height="128" alpha="90">
           <Ellipse x="1" y="1" width="126" height="126">

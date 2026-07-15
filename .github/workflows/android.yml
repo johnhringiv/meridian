@@ -85,7 +85,7 @@ jobs:
           set -euo pipefail
           cd /tmp/wff-tools/third_party/wff
           ./gradlew --no-daemon -q :specification:validator:executable-jar
-          java -jar specification/validator/build/libs/wff-validator.jar 1 \
+          java -jar specification/validator/build/libs/wff-validator.jar 2 \
             "$GITHUB_WORKSPACE/watchface/src/main/res/raw/watchface.xml"
 
       - name: WFF memory footprint validation
@@ -96,7 +96,7 @@ jobs:
           # Glob: the APK is watchface-release.apk when signed, -unsigned.apk without the keystore secret
           java -jar memory-footprint/build/libs/memory-footprint.jar \
             --watch-face "$GITHUB_WORKSPACE"/watchface/build/outputs/apk/release/watchface-release*.apk \
-            --schema-version 1 \
+            --schema-version 2 \
             --ambient-limit-mb 10 \
             --active-limit-mb 100 \
             --apply-v1-offload-limitations \

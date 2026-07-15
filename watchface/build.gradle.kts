@@ -17,12 +17,12 @@ android {
 
     defaultConfig {
         applicationId = "com.johnhringiv.meridian"
-        // minSdk 33 = Wear OS 4, the floor for Watch Face Format v1 (all this face needs).
-        minSdk = 33
+        // minSdk 34 = Wear OS 5, the floor for Watch Face Format v2 (HEART_RATE default).
+        minSdk = 34
         targetSdk = 36
         // versionCode bumps on every feature-branch change (CI-enforced > main).
         // versionName bumps once per PR to main (CI-enforced).
-        versionCode = 3
+        versionCode = 4
         versionName = "0.1"
     }
 

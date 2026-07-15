@@ -18,9 +18,9 @@ This is a personal-use face first (sideload), with an option to publish to the P
 ## Target platform
 
 - **Format:** Watch Face Format (WFF), declarative XML. No executable/canvas rendering code.
-- **WFF version:** declare `com.google.wear.watchface.format.version = 1` in the manifest with a matching `minSdk 33`. Everything this design uses — tag expressions (battery, date), `Arc` + `Transform`, `Condition`, complications, color configuration — is WFF v1. Google's guidance is to declare the lowest version that covers the features used, so the face runs on Wear OS 4+ (any Pixel Watch), not just Wear OS 6. Bump only if a feature demands it (flavors/weather → v2, ambient transitions/photos → v4; latest is v5).
+- **WFF version:** declare `com.google.wear.watchface.format.version = 2` in the manifest with a matching `minSdk 34`. Google's guidance is to declare the lowest version that covers the features used; v2 is forced by the `HEART_RATE` default provider (a v2 addition) — everything else here (tag expressions, `Arc` + `Transform`, `Condition`, `TextCircular`, `BoundingArc`, color configuration) is v1. Bump further only if a feature demands it (ambient transitions/photos → v4; latest is v5).
 - The manifest must also set `android:hasCode="false"` on `<application>` (WFF packages are resource-only) — the sample already does this; keep it.
-- **Primary device:** Pixel Watch 4, 45mm. With WFF v1 / minSdk 33 it also runs on any Wear OS 4+ device (all Pixel Watches).
+- **Primary device:** Pixel Watch 4, 45mm. With WFF v2 / minSdk 34 it also runs on any Wear OS 5+ device (all Pixel Watches — PW1/2 received Wear OS 5).
 - **Design canvas:** 450 x 450 (WFF standard design space; scales to physical resolution).
 
 ## Base project

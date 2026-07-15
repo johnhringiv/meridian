@@ -27,7 +27,7 @@ Grab the APK from [Releases](https://github.com/johnhringiv/meridian/releases), 
    ```
 4. Long-press the current watch face → pick **Meridian** → tap the face to assign the two complications and color theme.
 
-Needs Wear OS 4+ (minSdk 33, WFF v1). `adb` ships with [Android platform-tools](https://developer.android.com/tools/releases/platform-tools).
+Needs Wear OS 5+ (minSdk 34, WFF v2 — required by the heart-rate default complication; still covers every Pixel Watch). `adb` ships with [Android platform-tools](https://developer.android.com/tools/releases/platform-tools).
 
 ## Building from source
 

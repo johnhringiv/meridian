@@ -11,10 +11,10 @@
     <meta-data
         android:name="com.google.android.wearable.standalone"
         android:value="true" />
-    <!-- Lowest WFF version that covers this face (arcs, conditions, battery tag,
-         complications, color configuration are all v1) — maximizes device reach. -->
+    <!-- Lowest WFF version that covers this face. v2 is required by the
+         HEART_RATE default provider; everything else is v1. -->
     <property
         android:name="com.google.wear.watchface.format.version"
-        android:value="1" />
+        android:value="2" />
   </application>
 </manifest>
