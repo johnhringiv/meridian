@@ -117,6 +117,30 @@
       </TimeText>
     </DigitalClock>
 
+    <!-- Rim slot glyphs: fixed chrome at the leading edge of each rim
+         complication's text arc (the stock face does the same — providers
+         don't supply icons). Copper is baked into the PNGs: the DWF runtime
+         doesn't render static Image resources inside Complication renderers,
+         and tintColor doesn't apply to scene-level images. -->
+    <Group x="0" y="0" width="450" height="450" name="rim_glyphs">
+      <PartImage x="29" y="153" width="26" height="26" name="glyph_sunrise">
+        <Variant mode="AMBIENT" target="alpha" value="130"/>
+        <Image resource="ic_rim_sunrise"/>
+      </PartImage>
+      <PartImage x="352" y="81" width="26" height="26" name="glyph_uv">
+        <Variant mode="AMBIENT" target="alpha" value="130"/>
+        <Image resource="ic_rim_sun"/>
+      </PartImage>
+      <PartImage x="28" y="268" width="26" height="26" name="glyph_worldclock">
+        <Variant mode="AMBIENT" target="alpha" value="130"/>
+        <Image resource="ic_rim_globe"/>
+      </PartImage>
+      <PartImage x="340" y="355" width="26" height="26" name="glyph_moon">
+        <Variant mode="AMBIENT" target="alpha" value="130"/>
+        <Image resource="ic_rim_moon"/>
+      </PartImage>
+    </Group>
+
     <!-- Date chips: day-of-week left, month + day right -->
     <Group x="0" y="202" width="450" height="30" name="date_chips">
       <PartText x="34" y="0" width="88" height="30">
@@ -514,11 +538,8 @@
             <Expression name="tl_title"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression>
           </Expressions>
           <Compare expression="tl_iconAndTitle">
-            <PartImage x="21" y="192" width="26" height="26" tintColor="[CONFIGURATION.themeColor.1]">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
-            </PartImage>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="280" endAngle="330" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="293" endAngle="335" align="START" direction="CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s %s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
@@ -529,11 +550,8 @@
             </PartText>
           </Compare>
           <Compare expression="tl_icon">
-            <PartImage x="21" y="192" width="26" height="26" tintColor="[CONFIGURATION.themeColor.1]">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
-            </PartImage>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="280" endAngle="330" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="293" endAngle="335" align="START" direction="CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
@@ -544,7 +562,7 @@
           </Compare>
           <Compare expression="tl_title">
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="280" endAngle="330" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="293" endAngle="335" align="START" direction="CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s %s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
@@ -556,7 +574,7 @@
           </Compare>
           <Default>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="280" endAngle="330" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="293" endAngle="335" align="START" direction="CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
@@ -603,11 +621,8 @@
             <Expression name="tr_title"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression>
           </Expressions>
           <Compare expression="tr_iconAndTitle">
-            <PartImage x="296" y="39" width="26" height="26" tintColor="[CONFIGURATION.themeColor.1]">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
-            </PartImage>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="30" endAngle="80" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="52" endAngle="85" align="START" direction="CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s %s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
@@ -618,11 +633,8 @@
             </PartText>
           </Compare>
           <Compare expression="tr_icon">
-            <PartImage x="296" y="39" width="26" height="26" tintColor="[CONFIGURATION.themeColor.1]">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
-            </PartImage>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="30" endAngle="80" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="52" endAngle="85" align="START" direction="CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
@@ -633,7 +645,7 @@
           </Compare>
           <Compare expression="tr_title">
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="30" endAngle="80" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="52" endAngle="85" align="START" direction="CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s %s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
@@ -645,7 +657,7 @@
           </Compare>
           <Default>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="30" endAngle="80" align="CENTER" direction="CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="52" endAngle="85" align="START" direction="CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
@@ -688,11 +700,8 @@
             <Expression name="bl_title"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression>
           </Expressions>
           <Compare expression="bl_iconAndTitle">
-            <PartImage x="21" y="229" width="26" height="26" tintColor="[CONFIGURATION.themeColor.1]">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
-            </PartImage>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="260" endAngle="210" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="248" endAngle="210" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s %s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
@@ -703,11 +712,8 @@
             </PartText>
           </Compare>
           <Compare expression="bl_icon">
-            <PartImage x="21" y="229" width="26" height="26" tintColor="[CONFIGURATION.themeColor.1]">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
-            </PartImage>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="260" endAngle="210" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="248" endAngle="210" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
@@ -718,7 +724,7 @@
           </Compare>
           <Compare expression="bl_title">
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="260" endAngle="210" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="248" endAngle="210" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s %s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
@@ -730,7 +736,7 @@
           </Compare>
           <Default>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="260" endAngle="210" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="248" endAngle="210" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
@@ -777,11 +783,8 @@
             <Expression name="br_title"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression>
           </Expressions>
           <Compare expression="br_iconAndTitle">
-            <PartImage x="293" y="386" width="26" height="26" tintColor="[CONFIGURATION.themeColor.1]">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
-            </PartImage>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="150" endAngle="100" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="133" endAngle="100" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s %s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
@@ -792,11 +795,8 @@
             </PartText>
           </Compare>
           <Compare expression="br_icon">
-            <PartImage x="293" y="386" width="26" height="26" tintColor="[CONFIGURATION.themeColor.1]">
-              <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
-            </PartImage>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="150" endAngle="100" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="133" endAngle="100" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>
@@ -807,7 +807,7 @@
           </Compare>
           <Compare expression="br_title">
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="150" endAngle="100" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="133" endAngle="100" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s %s]]>
                     <Parameter expression="[COMPLICATION.TITLE]"/>
@@ -819,7 +819,7 @@
           </Compare>
           <Default>
             <PartText x="0" y="0" width="450" height="450">
-              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="150" endAngle="100" align="CENTER" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
+              <TextCircular centerX="225" centerY="225" width="384" height="384" startAngle="133" endAngle="100" align="START" direction="COUNTER_CLOCKWISE" ellipsis="TRUE">
                 <Font family="SYNC_TO_DEVICE" size="20.0" color="[CONFIGURATION.themeColor.1]">
                   <Template><![CDATA[%s]]>
                     <Parameter expression="[COMPLICATION.TEXT]"/>

@@ -85,8 +85,10 @@ jobs:
           set -euo pipefail
           cd /tmp/wff-tools/third_party/wff
           ./gradlew --no-daemon -q :specification:validator:executable-jar
+          # The validator exits 0 even on FAILED — gate on its output instead.
           java -jar specification/validator/build/libs/wff-validator.jar 2 \
-            "$GITHUB_WORKSPACE/watchface/src/main/res/raw/watchface.xml"
+            "$GITHUB_WORKSPACE/watchface/src/main/res/raw/watchface.xml" | tee validator.log
+          grep -q "PASSED" validator.log
 
       - name: WFF memory footprint validation
         run: |
