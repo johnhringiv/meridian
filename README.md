@@ -9,7 +9,11 @@ The layout riffs on the stock Pixel digital face with two deliberate changes:
 - **No mode label** — the center is time and date, nothing else.
 - **The outer tick ring is a battery gauge** — a rim arc sweeps with charge level and shifts copper → amber (≤30%) → red (≤15%).
 
-Plus two user-assignable complication slots and a selectable color theme (Copper / Silver / Sage).
+Plus two user-assignable complication circles, four curved rim complication slots (defaults: sunrise/sunset, UV, world clock, moon phase), and a selectable color theme (Copper / Silver / Sage).
+
+| Interactive                                      | Ambient (AOD)                            |
+| ------------------------------------------------ | ---------------------------------------- |
+| ![Interactive](docs/screenshots/interactive.png) | ![Ambient](docs/screenshots/ambient.png) |
 
 ## Install (sideload)
 
