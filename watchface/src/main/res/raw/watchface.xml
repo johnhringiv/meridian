@@ -6,7 +6,8 @@
     No mode label.
 
     Layout constants (450x450 design space, angles clockwise from 12 o'clock):
-      - Battery ring: diameter 434, thickness 8, full 360° sweep
+      - Battery ring: diameter 434, thickness 8; arc ends pinned at 12 so it
+        depletes clockwise (right side empties first)
       - Rim complications: text on radius 192 (diameter 384), one per diagonal:
         top-left 280-330°, top-right 30-80°, bottom-left 210-260°,
         bottom-right 100-150°. Bottom slots run COUNTER_CLOCKWISE so glyphs
@@ -50,8 +51,8 @@
         <Compare expression="batteryCritical">
           <PartDraw x="0" y="0" width="450" height="450" name="battery_level_critical">
             <Variant mode="AMBIENT" target="alpha" value="130"/>
-            <Arc centerX="225" centerY="225" width="434" height="434" startAngle="0" endAngle="0">
-              <Transform target="endAngle" value="[BATTERY_PERCENT] * 3.6"/>
+            <Arc centerX="225" centerY="225" width="434" height="434" startAngle="360" endAngle="360">
+              <Transform target="startAngle" value="360 - [BATTERY_PERCENT] * 3.6"/>
               <Stroke color="#ffFF5C5C" thickness="8" cap="ROUND"/>
             </Arc>
           </PartDraw>
@@ -59,8 +60,8 @@
         <Compare expression="batteryWarning">
           <PartDraw x="0" y="0" width="450" height="450" name="battery_level_warning">
             <Variant mode="AMBIENT" target="alpha" value="130"/>
-            <Arc centerX="225" centerY="225" width="434" height="434" startAngle="0" endAngle="0">
-              <Transform target="endAngle" value="[BATTERY_PERCENT] * 3.6"/>
+            <Arc centerX="225" centerY="225" width="434" height="434" startAngle="360" endAngle="360">
+              <Transform target="startAngle" value="360 - [BATTERY_PERCENT] * 3.6"/>
               <Stroke color="#ffFFB454" thickness="8" cap="ROUND"/>
             </Arc>
           </PartDraw>
@@ -68,8 +69,8 @@
         <Default>
           <PartDraw x="0" y="0" width="450" height="450" name="battery_level_ok">
             <Variant mode="AMBIENT" target="alpha" value="130"/>
-            <Arc centerX="225" centerY="225" width="434" height="434" startAngle="0" endAngle="0">
-              <Transform target="endAngle" value="[BATTERY_PERCENT] * 3.6"/>
+            <Arc centerX="225" centerY="225" width="434" height="434" startAngle="360" endAngle="360">
+              <Transform target="startAngle" value="360 - [BATTERY_PERCENT] * 3.6"/>
               <Stroke color="[CONFIGURATION.themeColor.0]" thickness="8" cap="ROUND"/>
             </Arc>
           </PartDraw>
