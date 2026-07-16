@@ -5,7 +5,9 @@
 **Working app title:** Meridian
 
 ## Objective
+
 Build a Wear OS **Watch Face Format (WFF)** watch face ("Meridian") that replicates the visual layout of the stock Pixel "Adventure / Digital Arcs" face, with two intentional changes:
+
 1. **Remove the center "DIGITAL MODE" text label** entirely (it is decorative and non-functional).
 2. **Replace the outer tick ring with a battery-level arc** (partial circle, like the built-in battery gauge), keeping the center of the face clean — time only.
 
@@ -14,14 +16,17 @@ This is a personal-use face first (sideload), with an option to publish to the P
 **Implementation approach — WFF (decided).** Built as declarative WFF, not the canvas/AndroidX (Jetpack Watch Face) API. Rationale: everything Meridian does — digital time, day/date, two complication slots, battery arc with threshold colors — is inside WFF's wheelhouse, and WFF gets Google's renderer to handle power/ambient/burn-in optimization for free on a daily-wear face. Canvas would only win if Meridian needed arbitrary tap regions, unconstrained animation, or was intended as a learning vehicle for the low-level API — none of which apply. If that ever changes, flipping to canvas would change the base sample, the CI (real Kotlin unit tests return, WFF validators drop), and the deliverables.
 
 ## Target platform
+
 - **Format:** Watch Face Format (WFF), declarative XML. No executable/canvas rendering code.
-- **WFF version:** declare `com.google.wear.watchface.format.version = 1` in the manifest with a matching `minSdk 33`. Everything this design uses — tag expressions (battery, date), `Arc` + `Transform`, `Condition`, complications, color configuration — is WFF v1. Google's guidance is to declare the lowest version that covers the features used, so the face runs on Wear OS 4+ (any Pixel Watch), not just Wear OS 6. Bump only if a feature demands it (flavors/weather → v2, ambient transitions/photos → v4; latest is v5).
+- **WFF version:** declare `com.google.wear.watchface.format.version = 2` in the manifest with a matching `minSdk 34`. Google's guidance is to declare the lowest version that covers the features used; v2 is forced by the `HEART_RATE` default provider (a v2 addition) — everything else here (tag expressions, `Arc` + `Transform`, `Condition`, `TextCircular`, `BoundingArc`, color configuration) is v1. Bump further only if a feature demands it (ambient transitions/photos → v4; latest is v5).
 - The manifest must also set `android:hasCode="false"` on `<application>` (WFF packages are resource-only) — the sample already does this; keep it.
-- **Primary device:** Pixel Watch 4, 45mm. With WFF v1 / minSdk 33 it also runs on any Wear OS 4+ device (all Pixel Watches).
+- **Primary device:** Pixel Watch 4, 45mm. With WFF v2 / minSdk 34 it also runs on any Wear OS 5+ device (all Pixel Watches — PW1/2 received Wear OS 5).
 - **Design canvas:** 450 x 450 (WFF standard design space; scales to physical resolution).
 
 ## Base project
+
 Start from the official sample, which is Apache-2.0 and already has correct Gradle/manifest wiring:
+
 - Repo: `android/wear-os-samples`
 - Module: `WatchFaceFormat/SimpleDigital`
 - Face definition lives at: `watchface/src/main/res/raw/watchface.xml`
@@ -30,9 +35,11 @@ Start from the official sample, which is Apache-2.0 and already has correct Grad
 Copy that module out as the project skeleton and replace `watchface.xml` with the implementation below. Reference `WatchFaceFormat/Complications` in the same repo for exact `ComplicationSlot` syntax.
 
 ## Repo conventions & CI/CD — mirror the regatta-timer repo
+
 **Before scaffolding, check out `johnhringiv/regatta-timer` via `gh`** (`gh repo clone johnhringiv/regatta-timer`). It is an existing, shipping **Wear OS Gradle/Kotlin app by the same owner**, so its structure and CI transfer almost directly to this project — reuse it rather than inventing conventions. Match the following:
 
 **Structure to mirror:**
+
 - Root Gradle Kotlin DSL: `build.gradle.kts`, `settings.gradle.kts`, `gradle.properties`, `gradlew`, `gradle/`. App module under `app/`.
 - `.githooks/pre-commit` (prettier auto-format of Markdown, re-stage). Enable with `git config core.hooksPath .githooks`.
 - `.gitattributes` — LF everywhere, CRLF for `*.bat`, binary flags for `*.png *.apk *.aab *.jks` etc. Copy as-is.
@@ -41,6 +48,7 @@ Copy that module out as the project skeleton and replace `watchface.xml` with th
 - Version fields live in `app/build.gradle.kts` as `versionCode` (int) and `versionName` (string).
 
 **CI to mirror (adapt `.github/workflows/android.yml`):** its job graph is exactly what this project wants —
+
 1. **`version-check`** (PR only, skips dependabot): fails the PR unless `versionCode` is bumped vs. the base branch **and** `versionName` changes once per PR to main. Keep this.
 2. **`docs-format`**: prettier `--check` on Markdown.
 3. **`build`**: Temurin JDK 21, `gradle/actions/setup-gradle`, restore release keystore from `secrets.KEYSTORE_B64` into `keystore.properties`, run unit tests + `assembleRelease`, upload artifact(s). **Adapt for WFF:** add the **WFF format validator + memory-footprint validator** as build/test steps so an invalid or over-budget face fails CI. The build artifact is the watch-face APK.
@@ -49,6 +57,7 @@ Copy that module out as the project skeleton and replace `watchface.xml` with th
 **What differs from regatta-timer:** that app is hand-written Kotlin with unit tests; this is a declarative WFF face. So drop app-logic unit tests in favor of the WFF validators, and there's no `pages.yml` equivalent needed here. Everything else (versioning discipline, keystore flow, release automation, hooks, gitattributes) carries over unchanged.
 
 ## Git workflow
+
 - **`main` stays clean and releasable.** Every version is a single squashed commit on `main`.
 - Develop **v0.1 on a feature branch** (e.g. `feat/wff-face-v0.1`). All iteration, WIP, and fixups happen there.
 - Open a PR into `main`; let CI (`version-check`, `docs-format`, `build` + validators) gate it.
@@ -60,17 +69,20 @@ Copy that module out as the project skeleton and replace `watchface.xml` with th
 ## Visual spec
 
 ### Center — time
+
 - Digital time, `hh:mm`, `hourFormat="SYNC_TO_DEVICE"` (respect the device 12/24h setting).
 - Center-aligned, large (~120px), positioned in the vertical middle.
 - **Two variants:** interactive = `NORMAL` weight; ambient (AOD) = `THIN` weight, via `<Variant mode="AMBIENT" .../>` on alpha/font.
 - No seconds.
 
 ### Day + date row
+
 - A single centered text row below the time showing day-of-week + month + day (e.g., `TUE  JUL 14`), sourced from WFF date tags (`[DAY_OF_WEEK_S]`, `[MONTH_S]`, `[DAY]`).
 - **Do NOT render any center mode label.** This is the whole point — the "DIGITAL MODE" element from the stock face is simply never authored.
 - Dim slightly in ambient.
 
 ### Outer rim — battery arc (replaces the tick ring)
+
 - **Remove the full minute/tick ring.**
 - Draw a **battery gauge as an arc around the rim**:
   - A faint background "track" arc (full sweep).
@@ -84,6 +96,7 @@ Copy that module out as the project skeleton and replace `watchface.xml` with th
 - **Data source (confirmed against docs):** `[BATTERY_PERCENT]` (0–100) is a WFF v1 data source. Drive the arc with the documented pattern — an `Arc` whose `endAngle` is recomputed by a child transform: `<Transform target="endAngle" value="[BATTERY_PERCENT] * 3.6"/>`. WFF angles are measured clockwise with 0° at 12 o'clock. See the skeleton in the appendix.
 
 ### Complication slots (user-assignable)
+
 - Two circular complication slots below the time (side by side), matching the stock layout's lower complications.
 - **`supportedTypes` must match rendered types.** Every type listed in `supportedTypes` needs its own `<Complication type="...">` renderer block inside the slot, or that type renders blank when the user picks it. The official `WatchFaceFormat/Complications` sample has a renderer per supported type — copy its `RANGED_VALUE`, `SMALL_IMAGE`, and `MONOCHROMATIC_IMAGE` blocks (Apache-2.0) rather than writing them from scratch, or trim `supportedTypes` to what's actually rendered.
 - Recommended v1 set: `RANGED_VALUE SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY` with all renderers copied from the sample.
@@ -93,14 +106,17 @@ Copy that module out as the project skeleton and replace `watchface.xml` with th
 - **Out of scope for v1:** the curved rim "arc" complications from the stock face. The rim is used by the battery arc in this design; adding rim arc-complications later would require making the battery a dedicated segment. Leave as a future option.
 
 ### Theme / color
+
 - Copper-forward palette. Placeholders: primary `#E8B18A`, secondary/dim `#C08552`, background `#000000`.
 - **Preferred:** expose a user-selectable theme color via WFF configuration (`[CONFIGURATION.themeColor.N]`) so color isn't hard-coded. If time-constrained, hard-code the copper palette for v1 and make configurability a follow-up.
 
 ### Ambient (AOD) behavior
+
 - Thin time, dimmed date, thinner/dimmer battery arc.
 - Minimize lit pixels overall. Every persistent element needs an `AMBIENT` variant.
 
 ## Validation (do this before every flash)
+
 - Both validators live in **github.com/google/watchface**:
   - **Format (XSD) validator** — `third_party/wff/` — checks `watchface.xml` against the declared WFF schema version.
   - **Memory footprint evaluator** — `play-validations/` — runs against the built APK; WFF enforces a memory budget (face is rejected at publish if over).
@@ -110,20 +126,24 @@ Copy that module out as the project skeleton and replace `watchface.xml` with th
 ## Build & deploy
 
 ### Phase 1 — Sideload (initial, this is v0.1)
+
 1. Build via Gradle wrapper -> APK (same `assembleRelease` path the CI `build` job uses; local debug build is fine for iteration).
 2. Enable wireless debugging on the watch (developer options).
 3. `adb connect <watch-ip>` then `adb install <apk>`.
 4. Select and customize the face on-device (assign the two complications).
+
 - Note: no companion-app sync for sideloaded faces; expect an edit → build → validate → reinstall loop.
 - The CI `release` job already attaches the built APK to a GitHub release on merge to `main`, so the sideload artifact is produced automatically too.
 
 ### Phase 2 — Play Store (optional, later)
+
 - A verified Play Console developer account is already in place.
 - Package as AAB, pass WFF format + memory validation, complete store listing, content rating, data-safety, submit for review. Reuse the `playstore/` asset folder convention from regatta-timer.
 - The keystore flow is already modeled by the regatta-timer `android.yml` (`KEYSTORE_B64` secret -> `keystore.properties`); reuse it for signed release builds.
 - **Naming/trademark:** the name "Meridian" is clear of Google's "Pixel"/"Adventure" marks (do not use those anywhere in the listing). Before publishing, re-verify "Meridian" isn't trademark-crowded in the watch-face / app space (it's a common word with existing users, e.g. Meridian Audio) — the repo name is unaffected since it's namespaced to the account, but the public store title should be checked. Fall back to a distinct title if needed.
 
 ## Constraints & gotchas
+
 - **No live preview.** WFF has no design-time render; iterate by building and flashing. `PREVIEW_TIME` metadata only sets the static store thumbnail.
 - **~15fps cap** on WFF animation. Fine for a mostly-static digital face.
 - **Memory budget** is enforced at validation/publish — keep image assets lean.
@@ -133,6 +153,7 @@ Copy that module out as the project skeleton and replace `watchface.xml` with th
 - A `supportedTypes` entry without a matching `<Complication type>` renderer block renders blank — keep them in lockstep.
 
 ## Acceptance criteria
+
 1. Face builds, passes format + memory validation, installs via `adb`, and is selectable on a Wear OS 6 watch.
 2. Center shows time only — no "DIGITAL MODE" or any mode label anywhere.
 3. Outer rim shows a battery arc that visibly tracks charge level and changes color at the warning/critical thresholds; no tick ring present.
@@ -143,6 +164,7 @@ Copy that module out as the project skeleton and replace `watchface.xml` with th
 8. v0.1 lands on a clean `main` as a **single squash-merged commit** (`versionCode = 1`, `versionName = "0.1"`), via a PR from `feat/wff-face-v0.1` with CI green; the PR body reads as the release changelog.
 
 ## References
+
 - WFF overview + element docs: developer.android.com/training/wearables/wff
 - WFF version feature matrix: developer.android.com/training/wearables/wff/release-notes
 - Transforms (arc/endAngle pattern): developer.android.com/training/wearables/wff/transform
@@ -152,6 +174,7 @@ Copy that module out as the project skeleton and replace `watchface.xml` with th
 - Battery tag `[BATTERY_PERCENT]`, arc transform, and Condition syntax verified against these docs 2026-07-15; re-check `DefaultProviderPolicy` attribute names at implementation time.
 
 ## Appendix — starting watchface.xml (time + day/date + two slots; battery ring to be added per spec above)
+
 Use this as the confirmed-correct base for the parts it covers, then finish theming on top. Syntax for TimeText, Variant, and ComplicationSlot below is verified against the official samples; the battery-arc skeleton uses the documented `Arc`/`Transform` pattern and `Condition` branching (exact geometry/thickness to be tuned on-device). Slots here render SHORT_TEXT only — before widening `supportedTypes`, copy the per-type renderer blocks from the `WatchFaceFormat/Complications` sample.
 
 ```xml

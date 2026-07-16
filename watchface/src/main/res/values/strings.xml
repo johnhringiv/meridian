@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="watch_face_name">Meridian</string>
+    <string name="colors_label">Color theme</string>
+    <string name="theme_copper_label">Copper</string>
+    <string name="theme_silver_label">Silver</string>
+    <string name="theme_sage_label">Sage</string>
+    <string name="left_complication_label">Left</string>
+    <string name="right_complication_label">Right</string>
+    <string name="top_left_complication_label">Top left rim</string>
+    <string name="top_right_complication_label">Top right rim</string>
+    <string name="bottom_left_complication_label">Bottom left rim</string>
+    <string name="bottom_right_complication_label">Bottom right rim</string>
+</resources>
