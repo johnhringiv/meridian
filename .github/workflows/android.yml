@@ -69,7 +69,8 @@ jobs:
           {
             echo "storeFile=release.jks"
             echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}"
-            echo "keyAlias=meridian"
+            # Shared signing key with regatta-timer (same keystore + secrets)
+            echo "keyAlias=regatta"
             echo "keyPassword=${{ secrets.KEYSTORE_PASSWORD }}"
           } > keystore.properties
 
