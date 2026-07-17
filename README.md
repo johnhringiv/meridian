@@ -4,6 +4,8 @@
 
 A clean digital watch face for Wear OS, built in the declarative [Watch Face Format](https://developer.android.com/training/wearables/wff) (no code, just XML — Google's renderer handles power, ambient, and burn-in optimization).
 
+Named for the line the sun crosses at local noon — _ante meridiem_ and _post meridiem_, the AM/PM on the dial — and for the navigator's line of longitude.
+
 The layout riffs on the stock Pixel digital face with two deliberate changes:
 
 - **No mode label** — the center is time and date, nothing else.
